@@ -29,18 +29,19 @@ func setPieces(pieces):
 
 func _on_update_score():
 	print("Actualizando puntaje")
-	current_score += 10 * current_pieces * current_streak  
+	current_score += 10 * current_pieces * current_streak  # Increment the score by 10 when tiles match
+	score_label.text = "Score:" + str(current_score) 	
 	
 func _on_update_moves():
 	print("Actualizando movimientos")
-	current_moves -= 1  
+	current_moves -= 1  # Decrement the score by 1 when tiles match
 	counter_label.text = str(current_moves) 
 	type_label.text = "BY MOVES" 
 	
 	if current_moves <= 0 and current_score < 1000:
 		print("No tienes más movimientos")
 		emit_signal("times_up")
-	elif current_score >= 1000:
+	elif current_moves > 0 and current_score >= 1000:
 		print("Ganaste")
 		current_moves = 16
 		emit_signal("won")
@@ -50,6 +51,10 @@ func _on_timer_timeout():
 	counter_label.text = str(current_timer) 
 	type_label.text = "BY TIME" 
 
-	if current_timer <= 0:
-		print("Se acabo el tiempo")
+	if current_timer <= 0 and current_score < 1000:
+		print("No tienes más movimientos")
 		emit_signal("times_up")
+	elif current_timer > 0 and current_score >= 1000:
+		print("Ganaste")
+		current_timer = 61
+		emit_signal("won")
